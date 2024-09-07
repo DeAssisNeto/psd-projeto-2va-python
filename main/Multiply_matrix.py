@@ -1,4 +1,3 @@
-
 matOne = [
     [1, 4],
     [2, 5],
@@ -6,7 +5,7 @@ matOne = [
 ]
 matTwo = [
     [1, 3],
-    [2, 4,],
+    [2, 4, ],
 ]
 
 matThree = [
@@ -21,41 +20,6 @@ matFour = [
     [1]
 ]
 
-# print(len(matOne))
-#
-# def multiplay(mat1, mat2, i, j):
-#     mult = 0
-#     sum1 = 0
-#     mat_result = []
-#     coluns = len(mat1[0])
-#     lines = len(mat2)
-#     if len(mat1[0]) != len(mat2):
-#         raise Exception(
-#             f"O numero de colunas do parametro mat1"
-#             f" ({coluns}) tem que ser igual do numero "
-#             f"de linhas so parametro mat2 ({lines})")
-#
-#
-#     for lm1 in range(len(mat1)):
-#         mat_line = []
-#         list_temp = []
-#         for cm2 in range(lines):
-#             for m in range(lines):
-#                 print(f'{mat1[lm1][cm2]} * {mat2[cm2][m]}')
-#                 mult += mat1[lm1][cm2] * mat2[cm2][m]
-#                 print(f'mult --- {mult}')
-#             mat_line.append(mult)
-#             if (True):
-#                 pass
-#
-#         mat_result.append(mat_line.copy())
-#         mat_line.clear()
-#         sum1 = 0
-#         mult = 0
-#
-#     print(mat_result)
-#
-# multiplay(mat1=matOne, mat2=matTwo, i=0, j=0)
 
 class MultiplyMatrix():
     def __init__(self, mat1, mat2):
@@ -76,18 +40,17 @@ class MultiplyMatrix():
             mult += line[i] * colun[i]
         return mult
 
-
-
     def multiply(self):
         mat_ret = []
         mat_line = []
         for i in range(self.size):
-            mat_ret.append([0]*self.size2)
+            mat_ret.append([0] * self.size2)
 
         for i in range(len(mat_ret[0])):
             for j in range(len(mat_ret)):
                 mat_ret[j][i] = self.multiply_l_c(self.get_line(i), self.get_colun(j))
         return mat_ret
+
 
 mult_mat = MultiplyMatrix(matOne, matTwo)
 mult_mat2 = MultiplyMatrix(matThree, matFour)
