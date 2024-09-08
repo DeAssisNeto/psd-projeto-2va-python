@@ -66,8 +66,12 @@ mult_mat = MultiplyMatrix(matOne, matTwo)
 mult_mat2 = MultiplyMatrix(matThree, matFour)
 
 matFive = mult_mat.txt_to_mat('ex1')[0]
+matSix = mult_mat.txt_to_mat('ex2')[0]
+
 mult_mat3 = MultiplyMatrix(matFive, matFive)
+mult_mat4 = MultiplyMatrix(matSix, matSix)
 
 print(mult_mat.multiply())
 print(mult_mat2.multiply())
 print(mult_mat3.multiply())
+print(mult_mat4.multiply())
