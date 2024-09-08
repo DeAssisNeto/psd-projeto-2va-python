@@ -42,7 +42,6 @@ class MultiplyMatrix():
 
     def multiply(self):
         mat_ret = []
-        mat_line = []
         for i in range(self.size):
             mat_ret.append([0] * self.size2)
 
@@ -51,9 +50,24 @@ class MultiplyMatrix():
                 mat_ret[j][i] = self.multiply_l_c(self.get_line(i), self.get_colun(j))
         return mat_ret
 
+    def txt_to_mat(self, file_name):
+        list_ret = []
+        with open(f'{file_name}.txt', 'r') as file:
+            for line in file:
+                list_ret.append(line.split())
+
+        for i in range(len(list_ret)):
+            for j in range(len(list_ret[i])):
+                list_ret[i][j] = float(list_ret[i][j])
+        return list_ret[1:], list_ret[0]
+
 
 mult_mat = MultiplyMatrix(matOne, matTwo)
 mult_mat2 = MultiplyMatrix(matThree, matFour)
 
+matFive = mult_mat.txt_to_mat('ex1')[0]
+mult_mat3 = MultiplyMatrix(matFive, matFive)
+
 print(mult_mat.multiply())
 print(mult_mat2.multiply())
+print(mult_mat3.multiply())
