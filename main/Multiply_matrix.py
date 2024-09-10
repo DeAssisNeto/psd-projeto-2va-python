@@ -22,35 +22,38 @@ matFour = [
 
 
 class MultiplyMatrix():
-    def __init__(self, mat1, mat2):
-        self.mat1 = mat1
-        self.mat2 = mat2
-        self.size = len(mat1)
-        self.size2 = len(mat2[0])
+    def __init__(self):
+        pass
 
-    def get_colun(self, num):
-        return [i for i in self.mat1[num]]
+    @staticmethod
+    def get_colun(num, mat1):
+        return [i for i in mat1[num]]
 
-    def get_line(self, num):
-        return [i[num] for i in self.mat2]
+    @staticmethod
+    def get_line(num, mat2):
+        return [i[num] for i in mat2]
 
-    def multiply_l_c(self, line, colun):
+    @staticmethod
+    def multiply_l_c(line, colun):
         mult = 0
         for i in range(len(line)):
             mult += line[i] * colun[i]
         return mult
 
-    def multiply(self):
+    @staticmethod
+    def multiply(mat1, mat2):
         mat_ret = []
-        for i in range(self.size):
-            mat_ret.append([0] * self.size2)
+        for i in range(len(mat1)):
+            mat_ret.append([0] * len(mat2[0]))
 
         for i in range(len(mat_ret[0])):
             for j in range(len(mat_ret)):
-                mat_ret[j][i] = self.multiply_l_c(self.get_line(i), self.get_colun(j))
+                mat_ret[j][i] = MultiplyMatrix.multiply_l_c(
+                    MultiplyMatrix.get_line(i, mat2), MultiplyMatrix.get_colun(j, mat1))
         return mat_ret
 
-    def txt_to_mat(self, file_name):
+    @staticmethod
+    def txt_to_mat(file_name):
         list_ret = []
         with open(f'{file_name}.txt', 'r') as file:
             for line in file:
@@ -62,16 +65,10 @@ class MultiplyMatrix():
         return list_ret[1:], list_ret[0]
 
 
-mult_mat = MultiplyMatrix(matOne, matTwo)
-mult_mat2 = MultiplyMatrix(matThree, matFour)
+matFive = MultiplyMatrix.txt_to_mat('ex1')[0]
+matSix = MultiplyMatrix.txt_to_mat('ex2')[0]
 
-matFive = mult_mat.txt_to_mat('ex1')[0]
-matSix = mult_mat.txt_to_mat('ex2')[0]
-
-mult_mat3 = MultiplyMatrix(matFive, matFive)
-mult_mat4 = MultiplyMatrix(matSix, matSix)
-
-print(mult_mat.multiply())
-print(mult_mat2.multiply())
-print(mult_mat3.multiply())
-print(mult_mat4.multiply())
+print(MultiplyMatrix.multiply(matOne, matTwo))
+print(MultiplyMatrix.multiply(matThree, matFour))
+print(MultiplyMatrix.multiply(matFive, matFive))
+print(MultiplyMatrix.multiply(matSix, matSix))
