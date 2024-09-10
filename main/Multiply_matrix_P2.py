@@ -69,9 +69,22 @@ if __name__ == "__main__":
     #matFive = txt_to_mat('ex1')[0]
     #matSix = txt_to_mat('ex2')[0]
     #matSeven = txt_to_mat('ex3')[0]
+    
+    inicio_processo = datetime.now().strftime("%H:%M:%S.%f")
     multiply(matThree, matFour)
+    fim_processo = datetime.now().strftime("%H:%M:%S.%f")
 
     #print(multiply(matThree, matFour))
     #print(multiply(matThree, matFour))
     #print(multiply(matOne, matTwo))
     #print(multiply(matSix, matSix))
+
+    teste = 0
+    print(f"variações de P1, P2, P3, P4 e P5: {teste}")
+    print(f"Computadores Remotos: {teste}")
+    print(f"Numero de Linhas Matriz: {teste}")
+    print(f"Numero de Colunas Matriz: {teste}")
+    print(f"Tempo de Processamento: {fim_processo-inicio_processo}")    
+    print("")
+    print(f"Matriz Gerada: {teste}")
+
