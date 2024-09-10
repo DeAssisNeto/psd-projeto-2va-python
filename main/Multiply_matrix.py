@@ -1,3 +1,6 @@
+from multiprocessing import Process, Manager
+import socket
+
 matOne = [
     [1, 4],
     [2, 5],
@@ -20,11 +23,18 @@ matFour = [
     [1]
 ]
 
+matFive = MultiplyMatrix.txt_to_mat('ex1')[0]
+matSix = MultiplyMatrix.txt_to_mat('ex2')[0]
+matSeven = MultiplyMatrix.txt_to_mat('ex3')[0]
 
 class MultiplyMatrix():
     def __init__(self):
-        pass
-
+        HOST = 'localhost'
+        PORT = 5000
+        server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        server_socket.bind((HOST, PORT))
+        server_socket.listen()
+        
     @staticmethod
     def get_colun(num, mat1):
         return [i for i in mat1[num]]
@@ -48,8 +58,10 @@ class MultiplyMatrix():
 
         for i in range(len(mat_ret[0])):
             for j in range(len(mat_ret)):
+                # iniciar processo
                 mat_ret[j][i] = MultiplyMatrix.multiply_l_c(
                     MultiplyMatrix.get_line(i, mat2), MultiplyMatrix.get_colun(j, mat1))
+                # Fechar processo
         return mat_ret
 
     @staticmethod
@@ -64,11 +76,10 @@ class MultiplyMatrix():
                 list_ret[i][j] = float(list_ret[i][j])
         return list_ret[1:], list_ret[0]
 
+# Inicar processo geral
+print(MultiplyMatrix.multiply(matSeven, matSeven))
+# Fechar Processo geral
 
-matFive = MultiplyMatrix.txt_to_mat('ex1')[0]
-matSix = MultiplyMatrix.txt_to_mat('ex2')[0]
-
-print(MultiplyMatrix.multiply(matOne, matTwo))
-print(MultiplyMatrix.multiply(matThree, matFour))
-print(MultiplyMatrix.multiply(matFive, matFive))
-print(MultiplyMatrix.multiply(matSix, matSix))
+#print(MultiplyMatrix.multiply(matThree, matFour))
+#print(MultiplyMatrix.multiply(matOne, matTwo))
+#print(MultiplyMatrix.multiply(matSix, matSix))
