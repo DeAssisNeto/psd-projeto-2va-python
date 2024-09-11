@@ -42,6 +42,11 @@ def multiply_l_c(line, colun, cont):
     return mult
 
 def multiply(mat1, mat2):
+    if len(mat1[0]) != len(mat2):
+        raise Exception(
+            f"O numero de colunas do parametro mat1"
+            f" ({len(mat1[0])}) tem que ser igual do numero "
+            f"de linhas so parametro mat2 ({len(mat2)})")
     mat_ret = []
     cont = 0
     for i in range(len(mat1)):
