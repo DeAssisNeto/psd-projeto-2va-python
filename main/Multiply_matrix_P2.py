@@ -1,4 +1,4 @@
-from multiprocessing import Process
+from multiprocessing import Process, Queue
 from datetime import datetime
 
 matOne = [
@@ -29,15 +29,19 @@ def get_colun(num, mat1):
 def get_line(num, mat2):
     return [i[num] for i in mat2]
 
-def multiply_l_c(line, colun, cont):
+def multiply_l_c(line, colun, cont, q, j, i):
     mult = 0
     inicio = datetime.now().strftime("%H:%M:%S.%f")
     print(f"Processo {cont}: Inicio: {inicio}" )
-    for i in range(len(line)):
-        mult += line[i] * colun[i]
+
+    for k in range(len(line)):
+        mult += line[k] * colun[k]
+
     fim = datetime.now().strftime("%H:%M:%S.%f")
     print(f"Processo {cont}: Fim: {fim}" )
-    return mult
+
+    q.put((j, i, mult))
+
 
 def multiply(mat1, mat2):
     if len(mat1[0]) != len(mat2):
@@ -45,6 +49,8 @@ def multiply(mat1, mat2):
             f"O numero de colunas do parametro mat1"
             f" ({len(mat1[0])}) tem que ser igual do numero "
             f"de linhas so parametro mat2 ({len(mat2)})")
+
+
     mat_ret = []
     cont = 0
     for i in range(len(mat1)):
@@ -63,15 +69,26 @@ def multiply(mat1, mat2):
                                                      # lines representa as linhas do parametro mat1
                                                      # coluns representa as colunas do parametro mat2
 
+    n = len(coluns)  # número de colunas
+    m = len(lines)  # número de linhas
+
+    # Inicializando a fila para receber os resultados
+    q = Queue()
+    mat_ret = [[0 for _ in range(n)] for _ in range(m)]
     # Ainda não aplicado!
 
     for i in range(len(mat_ret[0])):
         for j in range(len(mat_ret)):
-            cont+=1
-            mat_ret[j][i] = Process(target=multiply_l_c, args=(coluns[i], lines[j], cont))
+            cont = f'({j},{i})'
+            process = Process(target=multiply_l_c, args=(coluns[i], lines[j], cont, q, j, i))
             # Resultado esta saindo o processo, ajustar para que cada processo mande o valor para outra matriz ou outra coisa
-            mat_ret[j][i].start()
+            process.start()
             print(mat_ret[j][i])
+
+    for _ in range(n * m):
+        j, i, result = q.get()
+        mat_ret[j][i] = result
+
     return mat_ret
 
 
@@ -103,7 +120,7 @@ if __name__ == "__main__":
     #matSix = txt_to_mat('ex2')[0]
     #matSeven = txt_to_mat('ex3')[0]
 
-    print(multiply(matThree, matFour))
+    print( f'mat3 x mat4z\n - {multiply(txt_to_mat("ex2")[0], txt_to_mat("ex2")[0])} -')
     #print(multiply(matOne, matTwo))
     #print(multiply(matSix, matSix))
     lines, coluns = get_lines_and_coluns(matOne, matTwo)
