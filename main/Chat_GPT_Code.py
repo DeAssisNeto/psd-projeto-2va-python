@@ -1,6 +1,7 @@
 import numpy as np
 import time
 import threading
+import multiprocessing
 import os
 
 def multiply_part(A, B, C, start_row, end_row):
@@ -14,6 +15,8 @@ def main():
     num_threads = os.cpu_count()
     threads = []
     rows_per_thread = A.shape[0] // num_threads
+    print(f'rows_per - {rows_per_thread} type- {type(rows_per_thread)}')
+    print(f'rows - {A.shape[0]} type- {type(A.shape[0])}')
     
     start_time = time.time()
     for i in range(num_threads):

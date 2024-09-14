@@ -81,6 +81,18 @@ def txt_to_mat(file_name):
             list_ret[i][j] = float(list_ret[i][j])
     return list_ret[1:], list_ret[0]
 
+def get_lines_and_coluns(mat1, mat2):
+    lines_mat1 = []
+    coluns_mat2 = []
+
+    for i in range(len(mat1)):
+        lines_mat1.append(mat1[i])
+
+    for i in range(len(mat2)):
+        coluns_mat2.append(get_line(i, mat2))
+
+    return lines_mat1, coluns_mat2
+
 if __name__ == "__main__":
     #matFive = txt_to_mat('ex1')[0]
     #matSix = txt_to_mat('ex2')[0]
@@ -89,6 +101,9 @@ if __name__ == "__main__":
     print(multiply(matThree, matFour))
     #print(multiply(matOne, matTwo))
     #print(multiply(matSix, matSix))
+    lines, coluns = get_lines_and_coluns(matOne, matTwo)
+    print(lines)
+    print(coluns)
 
     print(f"Variações de P1, P2, P3, P4 e P5: {0}")
     print(f"Computadores Remotos: {0}")
