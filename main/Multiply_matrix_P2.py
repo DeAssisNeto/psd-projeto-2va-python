@@ -8,7 +8,7 @@ matOne = [
 ]
 matTwo = [
     [1, 3],
-    [2, 4, ],
+    [2, 4],
 ]
 
 matThree = [
@@ -58,6 +58,9 @@ def multiply(mat1, mat2):
     # Processo 2 [2][2]+[2][4] 
     # Processo 3 [3][1]+[3][3]
     # Processo 4 [4][2]+[4][4]
+
+    lines, coluns = get_lines_and_coluns(mat1, mat2)
+
     # Ainda não aplicado!
 
     for i in range(len(mat_ret[0])):
@@ -88,7 +91,7 @@ def get_lines_and_coluns(mat1, mat2):
     for i in range(len(mat1)):
         lines_mat1.append(mat1[i])
 
-    for i in range(len(mat2)):
+    for i in range(len(mat2[0])):
         coluns_mat2.append(get_line(i, mat2))
 
     return lines_mat1, coluns_mat2
