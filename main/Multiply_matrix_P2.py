@@ -59,14 +59,16 @@ def multiply(mat1, mat2):
     # Processo 3 [3][1]+[3][3]
     # Processo 4 [4][2]+[4][4]
 
-    lines, coluns = get_lines_and_coluns(mat1, mat2)
+    lines, coluns = get_lines_and_coluns(mat1, mat2) # divisão das matrizes de entrada
+                                                     # lines representa as linhas do parametro mat1
+                                                     # coluns representa as colunas do parametro mat2
 
     # Ainda não aplicado!
 
     for i in range(len(mat_ret[0])):
         for j in range(len(mat_ret)):
             cont+=1
-            mat_ret[j][i] = Process(target=multiply_l_c, args=(get_line(i, mat2), get_colun(j, mat1), cont))
+            mat_ret[j][i] = Process(target=multiply_l_c, args=(coluns[i], lines[j], cont))
             # Resultado esta saindo o processo, ajustar para que cada processo mande o valor para outra matriz ou outra coisa
             mat_ret[j][i].start()
             print(mat_ret[j][i])
