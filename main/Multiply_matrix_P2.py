@@ -14,7 +14,6 @@ def multiply_l_c(task_list, mat1, mat2, q, cc):
         line = mat1[j]
         colun = get_colun(i, mat2)
         mult = sum(line[k] * colun[k] for k in range(len(line)))
-        print(f"Processo: {cc}, calculando linha {j}, coluna {i}, resultado: {mult}")
         q.put((j, i, mult))  # Coloca o resultado na fila (linha, coluna, multiplicação)
 
 def multiply(mat1, mat2):
@@ -51,14 +50,6 @@ def multiply(mat1, mat2):
         cc += 1
         process.start()
 
-    # Aguarda a finalização de todos os processos com timeout para evitar travamentos
-    for process in processes:
-        process.join(timeout=10)  # Timeout de 10 segundos para cada processo
-        if process.is_alive():
-            print(f"Processo {process.pid} não terminou a tempo, encerrando.")
-
-    print("Todos os processos finalizaram.")
-
     # Coleta os resultados da fila
     collected_tasks = 0
     while collected_tasks < len(tasks):
@@ -72,9 +63,6 @@ def multiply(mat1, mat2):
     # Fim da contagem de tempo
     fim_total = datetime.now()
     time_total = fim_total - inicio_total
-    print(f"Multiplicação finalizada às {fim_total.strftime('%H:%M:%S.%f')}")
-    print(f"Tempo total de processamento: {time_total}")
-
     return mat_ret, num_cores, time_total
 
 def txt_to_mat(file_name):
@@ -96,9 +84,13 @@ if __name__ == "__main__":
     mat_result, num_cores, time_total = multiply(mat[0], mat[0])
 
     # Exibe informações sobre a execução
+    print(f"Variação P2")
     print(f"Número de núcleos: {num_cores}")
+    print(f"Computadores Remotos: {0}")
+    print(f"Numero de Linhas Matriz: {int(mat[1][0])}")
+    print(f"Numero de Colunas Matriz: {int(mat[1][1])}")
     print(f"Tempo de processamento: {time_total}")
 
-    print("\nMatriz Resultado:")
-    for line in mat_result:
-        print(line)  # Exibe a matriz resultante no formato adequado
+    #print("\nMatriz Resultado:")
+    #for line in mat_result:
+    #    print(line)  # Exibe a matriz resultante no formato adequado

@@ -95,15 +95,14 @@ if __name__ == "__main__":
     mat = txt_to_mat("./main/test1")
     mat_result = multiply(mat[0], mat[0])
 
-    print(f"Variações de P1, P2, P3, P4 e P5: P1")
-    print(f"Número de cores: {mat_result[1]}")
+    print(f"Variação P1")
+    print(f"Número de cores: 1")
     print(f"Computadores Remotos: {0}")
     print(f"Numero de Linhas Matriz: {int(mat[1][0])}")
     print(f"Numero de Colunas Matriz: {int(mat[1][1])}")
     print(f"Tempo de Processamento: {mat_result[2]}")
-
     print("")
 
-    print(f"Matriz Resposta:")
-    for line in mat_result[0]:
-        print(line)
+    #print(f"Matriz Resposta:")
+    #for line in mat_result[0]:
+    #    print(line)
