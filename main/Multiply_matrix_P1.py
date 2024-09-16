@@ -1,43 +1,17 @@
 from multiprocessing import cpu_count
 from datetime import datetime
 
-matOne = [
-    [1, 4],
-    [2, 5],
-    [3, 6]
-]
-matTwo = [
-    [1, 3],
-    [2, 4],
-]
-
-matThree = [
-    [5, 8, -4],
-    [6, 9, -5],
-    [4, 7, -2]
-]
-
-matFour = [
-    [2],
-    [-3],
-    [1]
-]
-
-
 def get_line(num, mat):
     return [line for line in mat[num]]
 
-
 def get_colun(num, mat):
     return [row[num] for row in mat]
-
 
 def multiply_l_c(line, colun, cont):
     mult = 0
     for i in range(len(line)):
         mult += line[i] * colun[i]
     return mult
-
 
 def multiply(mat1, mat2):
     if len(mat1[0]) != len(mat2):
@@ -65,7 +39,6 @@ def multiply(mat1, mat2):
 
     return mat_ret, num_cores, time_total
 
-
 def txt_to_mat(file_name):
     list_ret = []
     with open(f'{file_name}.txt', 'r') as file:
@@ -76,7 +49,6 @@ def txt_to_mat(file_name):
         for j in range(len(list_ret[i])):
             list_ret[i][j] = float(list_ret[i][j])
     return list_ret[1:], list_ret[0]
-
 
 def get_lines_and_coluns(mat1, mat2):
     lines_mat1 = []
@@ -90,9 +62,8 @@ def get_lines_and_coluns(mat1, mat2):
 
     return lines_mat1, coluns_mat2
 
-
 if __name__ == "__main__":
-    mat = txt_to_mat("./main/test1")
+    mat = txt_to_mat("./main/128")
     mat_result = multiply(mat[0], mat[0])
 
     print(f"Variação P1")
