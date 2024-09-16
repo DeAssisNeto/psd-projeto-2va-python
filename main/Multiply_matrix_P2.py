@@ -7,14 +7,14 @@ def get_line(num, mat):
 def get_colun(num, mat):
     return [row[num] for row in mat]
 
-def multiply_l_c(task_list, mat1, mat2, q):
+def multiply_l_c(task_list, mat1, mat2, q, cc):
     """Função executada pelos processos para multiplicar subconjuntos de linhas e colunas."""
     for task in task_list:
         j, i = task
         line = mat1[j]
         colun = get_colun(i, mat2)
         mult = sum(line[k] * colun[k] for k in range(len(line)))
-        print(f"Processo calculando linha {j}, coluna {i}, resultado: {mult}")
+        print(f"Processo: {cc}, calculando linha {j}, coluna {i}, resultado: {mult}")
         q.put((j, i, mult))  # Coloca o resultado na fila (linha, coluna, multiplicação)
 
 def multiply(mat1, mat2):
@@ -44,9 +44,11 @@ def multiply(mat1, mat2):
 
     # Cria e inicia os processos
     processes = []
+    cc = 1
     for i in range(num_cores):
-        process = Process(target=multiply_l_c, args=(task_split[i], mat1, mat2, q))
+        process = Process(target=multiply_l_c, args=(task_split[i], mat1, mat2, q, cc))
         processes.append(process)
+        cc += 1
         process.start()
 
     # Aguarda a finalização de todos os processos com timeout para evitar travamentos
