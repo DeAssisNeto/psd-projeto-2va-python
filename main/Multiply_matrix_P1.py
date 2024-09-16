@@ -92,7 +92,7 @@ def get_lines_and_coluns(mat1, mat2):
 
 
 if __name__ == "__main__":
-    mat = txt_to_mat("test1")
+    mat = txt_to_mat("./main/test1")
     mat_result = multiply(mat[0], mat[0])
 
     print(f"Variações de P1, P2, P3, P4 e P5: P1")
