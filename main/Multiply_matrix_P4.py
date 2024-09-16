@@ -1,7 +1,5 @@
-from multiprocessing import Process
+from multiprocessing import Process, Queue, cpu_count
 from datetime import datetime
-
-# Ainda não fiz nada, apenas dupliquei a P2!
 
 matOne = [
     [1, 4],
@@ -10,7 +8,7 @@ matOne = [
 ]
 matTwo = [
     [1, 3],
-    [2, 4, ],
+    [2, 4],
 ]
 
 matThree = [
@@ -25,51 +23,76 @@ matFour = [
     [1]
 ]
 
-def get_colun(num, mat1):
-    return [i for i in mat1[num]]
 
-def get_line(num, mat2):
-    return [i[num] for i in mat2]
+def get_line(num, mat):
+    return [line for line in mat[num]]
 
-def multiply_l_c(line, colun, cont):
-    mult = 0
-    inicio = datetime.now().strftime("%H:%M:%S.%f")
-    print(f"Processo {cont}: Inicio: {inicio}" )
-    for i in range(len(line)):
-        mult += line[i] * colun[i]
-    fim = datetime.now().strftime("%H:%M:%S.%f")
-    print(f"Processo {cont}: Fim: {fim}" )
-    return mult
+
+def get_colun(num, mat):
+    return [row[num] for row in mat]
+
+
+def multiply_l_c(task_list, mat1, mat2, q):
+    #Função executada pelos processos para multiplicar subconjuntos de linhas e colunas
+    for task in task_list:
+        j, i = task
+        line = mat1[j]
+        colun = get_colun(i, mat2)
+        mult = sum(line[k] * colun[k] for k in range(len(line)))
+        q.put((j, i, mult))
+
 
 def multiply(mat1, mat2):
+    """Multiplica duas matrizes utilizando um número de processos adaptado aos núcleos do processador"""
     if len(mat1[0]) != len(mat2):
         raise Exception(
-            f"O numero de colunas do parametro mat1"
-            f" ({len(mat1[0])}) tem que ser igual do numero "
-            f"de linhas so parametro mat2 ({len(mat2)})")
+            f"O número de colunas de mat1 ({len(mat1[0])}) deve ser igual ao número de linhas de mat2 ({len(mat2)}).")
+
+    # Inicializa a matriz resultado
     mat_ret = []
-    cont = 0
     for i in range(len(mat1)):
         mat_ret.append([0] * len(mat2[0]))
-    print(mat_ret)
-    
-    # [1][2] [1][2]
-    # [3][4] [3][4]
-    # Dividir matriz em 4 por exemplo, então uma matriz 4 x 4
-    # Processo 1 [1][1]+[1][3]
-    # Processo 2 [2][2]+[2][4] 
-    # Processo 3 [3][1]+[3][3]
-    # Processo 4 [4][2]+[4][4]
-    # Ainda não aplicado!
 
-    for i in range(len(mat_ret[0])):
-        for j in range(len(mat_ret)):
-            cont+=1
-            mat_ret[j][i] = Process(target=multiply_l_c, args=(get_line(i, mat2), get_colun(j, mat1), cont))
-            # Resultado esta saindo o processo, ajustar para que cada processo mande o valor para outra matriz ou outra coisa
-            mat_ret[j][i].start()
-            print(mat_ret[j][i])
-    return mat_ret
+    # Número de núcleos lógicos do processador
+    num_cores = int(cpu_count()/2)
+    print(f"Utilizando {num_cores} processos.")
+
+    # Lista de todas as operações (pares de índices [j, i] para multiplicação)
+    tasks = [(j, i) for j in range(len(mat1)) for i in range(len(mat2[0]))]
+
+    # Divide as tarefas entre os processos
+    task_split = [tasks[i::num_cores] for i in range(num_cores)]
+
+    # Inicializa a fila para armazenar os resultados
+    q = Queue()
+
+    # Início da contagem de tempo
+    inicio_total = datetime.now()
+    print(f"Multiplicação iniciada às {inicio_total.strftime('%H:%M:%S.%f')}")
+
+    # Cria e inicia os processos
+    processes = []
+    for i in range(num_cores):
+        process = Process(target=multiply_l_c, args=(task_split[i], mat1, mat2, q))
+        processes.append(process)
+        process.start()
+
+    # Aguarda a finalização de todos os processos
+    for process in processes:
+        process.join()
+
+    # Coleta os resultados da fila
+    while not q.empty():
+        j, i, result = q.get()
+        mat_ret[j][i] = result
+
+    # Fim da contagem de tempo
+    fim_total = datetime.now()
+    time_total = fim_total - inicio_total
+    print(f"Multiplicação finalizada às {fim_total.strftime('%H:%M:%S.%f')}")
+    print(f"Tempo total de processamento: {fim_total}")
+
+    return mat_ret, num_cores, time_total
 
 
 def txt_to_mat(file_name):
@@ -83,20 +106,33 @@ def txt_to_mat(file_name):
             list_ret[i][j] = float(list_ret[i][j])
     return list_ret[1:], list_ret[0]
 
+
+def get_lines_and_coluns(mat1, mat2):
+    lines_mat1 = []
+    coluns_mat2 = []
+
+    for line in mat1:
+        lines_mat1.append(line)
+
+    for i in range(len(mat2[0])):
+        coluns_mat2.append(get_colun(i, mat2))
+
+    return lines_mat1, coluns_mat2
+
+
 if __name__ == "__main__":
-    #matFive = txt_to_mat('ex1')[0]
-    #matSix = txt_to_mat('ex2')[0]
-    #matSeven = txt_to_mat('ex3')[0]
+    mat = txt_to_mat("test1")
+    mat_result = multiply(mat[0], mat[0])
 
-    print(multiply(matThree, matFour))
-    #print(multiply(matOne, matTwo))
-    #print(multiply(matSix, matSix))
-
-    print(f"Variações de P1, P2, P3, P4 e P5: {0}")
+    print(f"Variações de P1, P2, P3, P4 e P5: P4")
+    print(f"Número de cores: {mat_result[1]}")
     print(f"Computadores Remotos: {0}")
-    print(f"Numero de Linhas Matriz: {0}")
-    print(f"Numero de Colunas Matriz: {0}")
-    print(f"Tempo de Processamento: {0}")    
-    print("")
-    print(f"Matriz Gerada: {0}")
+    print(f"Numero de Linhas Matriz: {int(mat[1][0])}")
+    print(f"Numero de Colunas Matriz: {int(mat[1][1])}")
+    print(f"Tempo de Processamento: {mat_result[2]}")
 
+    print("")
+
+    print(f"Matriz Resposta:")
+    for line in mat_result[0]:
+        print(line)
