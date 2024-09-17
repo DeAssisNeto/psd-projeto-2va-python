@@ -63,7 +63,7 @@ def get_lines_and_coluns(mat1, mat2):
     return lines_mat1, coluns_mat2
 
 if __name__ == "__main__":
-    mat = txt_to_mat("./main/128")
+    mat = txt_to_mat("./main/2048")
     mat_result = multiply(mat[0], mat[0])
 
     print(f"Variação P1")
@@ -72,8 +72,6 @@ if __name__ == "__main__":
     print(f"Numero de Linhas Matriz: {int(mat[1][0])}")
     print(f"Numero de Colunas Matriz: {int(mat[1][1])}")
     print(f"Tempo de Processamento: {mat_result[2]}")
-    print("")
-
-    #print(f"Matriz Resposta:")
-    #for line in mat_result[0]:
-    #    print(line)
+    print(f"\nMatriz Resposta:")
+    for line in mat_result[0]:
+        print(line)

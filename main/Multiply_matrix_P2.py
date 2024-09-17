@@ -1,4 +1,4 @@
-from multiprocessing import Process, Queue, cpu_count
+from multiprocessing import Process, Queue
 from datetime import datetime
 
 def get_line(num, mat):
@@ -7,7 +7,7 @@ def get_line(num, mat):
 def get_colun(num, mat):
     return [row[num] for row in mat]
 
-def multiply_l_c(task_list, mat1, mat2, q, cc):
+def multiply_l_c(task_list, mat1, mat2, q):
     """Função executada pelos processos para multiplicar subconjuntos de linhas e colunas."""
     for task in task_list:
         j, i = task
@@ -25,8 +25,7 @@ def multiply(mat1, mat2):
     mat_ret = [[0] * len(mat2[0]) for _ in range(len(mat1))]
 
     # Número de núcleos lógicos do processador (máximo de 8 processos)
-    num_cores = min(cpu_count(), 8)
-    print(f"Utilizando {num_cores} processos.")
+    num_cores = 8
 
     # Lista de todas as operações (pares de índices [j, i] para multiplicação)
     tasks = [(j, i) for j in range(len(mat1)) for i in range(len(mat2[0]))]
@@ -39,15 +38,12 @@ def multiply(mat1, mat2):
 
     # Início da contagem de tempo
     inicio_total = datetime.now()
-    print(f"Multiplicação iniciada às {inicio_total.strftime('%H:%M:%S.%f')}")
 
     # Cria e inicia os processos
     processes = []
-    cc = 1
     for i in range(num_cores):
-        process = Process(target=multiply_l_c, args=(task_split[i], mat1, mat2, q, cc))
+        process = Process(target=multiply_l_c, args=(task_split[i], mat1, mat2, q))
         processes.append(process)
-        cc += 1
         process.start()
 
     # Coleta os resultados da fila
@@ -78,7 +74,7 @@ def txt_to_mat(file_name):
 
 if __name__ == "__main__":
     # Lê a matriz de um arquivo
-    mat = txt_to_mat("./main/test1")
+    mat = txt_to_mat("./main/128")
 
     # Executa a multiplicação de matrizes
     mat_result, num_cores, time_total = multiply(mat[0], mat[0])
@@ -90,7 +86,6 @@ if __name__ == "__main__":
     print(f"Numero de Linhas Matriz: {int(mat[1][0])}")
     print(f"Numero de Colunas Matriz: {int(mat[1][1])}")
     print(f"Tempo de processamento: {time_total}")
-
-    #print("\nMatriz Resultado:")
-    #for line in mat_result:
-    #    print(line)  # Exibe a matriz resultante no formato adequado
+    print("\nMatriz Resultado:")
+    for line in mat_result:
+        print(line)  # Exibe a matriz resultante no formato adequado

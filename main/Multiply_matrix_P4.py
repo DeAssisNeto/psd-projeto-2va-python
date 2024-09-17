@@ -1,4 +1,4 @@
-from multiprocessing import Process, Queue, cpu_count
+from multiprocessing import Process, Queue
 from datetime import datetime
 
 def get_line(num, mat):
@@ -26,7 +26,6 @@ def multiply(mat1, mat2):
 
     # Número de núcleos lógicos do processador (máximo de 16 processos)
     num_cores = 4
-    print(f"Utilizando {num_cores} processos.")
 
     # Lista de todas as operações (pares de índices [j, i] para multiplicação)
     tasks = [(j, i) for j in range(len(mat1)) for i in range(len(mat2[0]))]
@@ -39,7 +38,6 @@ def multiply(mat1, mat2):
 
     # Início da contagem de tempo
     inicio_total = datetime.now()
-    print(f"Multiplicação iniciada às {inicio_total.strftime('%H:%M:%S.%f')}")
 
     # Cria e inicia os processos
     processes = []
@@ -63,8 +61,6 @@ def multiply(mat1, mat2):
     # Fim da contagem de tempo
     fim_total = datetime.now()
     time_total = fim_total - inicio_total
-    print(f"Multiplicação finalizada às {fim_total.strftime('%H:%M:%S.%f')}")
-    print(f"Tempo total de processamento: {time_total}")
 
     return mat_ret, num_cores, time_total
 
@@ -81,7 +77,7 @@ def txt_to_mat(file_name):
 
 if __name__ == "__main__":
     # Lê a matriz de um arquivo
-    mat = txt_to_mat("./main/test1")
+    mat = txt_to_mat("./main/128")
 
     # Executa a multiplicação de matrizes
     mat_result, num_cores, time_total = multiply(mat[0], mat[0])
